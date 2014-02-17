@@ -73,21 +73,28 @@ void draw()
     if(context.isTrackingSkeleton(userList[i]))
         { 
           determineUserJoints(userList[i]);
+          
           maskImage.loadPixels();
+          skinImage.loadPixels();
+          
           updateUserPixcels(userList[i]);
+          
           maskImage.updatePixels();
+          skinImage.updatePixels();
         }
   } 
   
   boolean useMask = false;
   if(useMask)
     {
-     cam.mask(maskImage);   
+     cam.mask(maskImage);
+     cam.mask(skinImage);   
      image(cam, 640 ,0);
     }
   else
    {
      image(maskImage,640,0);
+     image(skinImage,0,0);
    }  
   
    
@@ -127,6 +134,7 @@ private void updateUserPixcels(int userId)
         
         if(i<yOffset)
           { maskImage.pixels[di] = color(255,255,255); //ignore upper pixcel from depth camera
+            skinImage.pixels[di] = color(0,0,0); //ignore upper pixcel from depth camera
            continue;
           }
           
@@ -138,9 +146,14 @@ private void updateUserPixcels(int userId)
        
         
         if(userPixels[i]!=0)
-          maskImage.pixels[di] = color(0,0,0);
+         { maskImage.pixels[di] = color(0,0,0);
+           skinImage.pixels[di] = color(255,0,0);
+         }
         else
+         {
           maskImage.pixels[di] =  color(255,255,255) ; 
+          skinImage.pixels[di] =  color(0,0,0);
+         }
           
          
                 
